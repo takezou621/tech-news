@@ -1,6 +1,8 @@
 # 生成物・計測データはコミットしない (オーディションのサンプルとレポートは除く)
-audio/episodes/*
-!audio/episodes/.gitkeep
+# audio/<episode-id>/ に gen_narration 等の出力が入るため audio/ 全体を除外し、
+# 耳確認用のオーディション成果物だけ再取り込みする。
+audio/*
+!audio/audition/
 tools/audio/usage/
 reports/
 __pycache__/

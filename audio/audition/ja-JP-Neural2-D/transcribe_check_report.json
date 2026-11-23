@@ -1,7 +1,7 @@
 {
  "audio_dir": "/Users/kawai/dev/tech-news/audio/audition/ja-JP-Neural2-D",
  "script": "/Users/kawai/dev/tech-news/content/audition/test_script.json",
- "generated_at": "2026-11-23T14:46:49+00:00",
+ "generated_at": "2026-11-23T15:04:25+00:00",
  "model": "small",
  "device": "cpu",
  "compute_type": "int8",
@@ -12,7 +12,7 @@
  "overall_pass": true,
  "beat_fail": 0,
  "pass": true,
- "asr_elapsed_sec": 8.8,
+ "asr_elapsed_sec": 10.4,
  "beats_detail": [
   {
    "file": "s01_b00.wav",

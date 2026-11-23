@@ -124,16 +124,19 @@ def main() -> int:
     script = json.loads(script_path.read_text(encoding="utf-8"))
 
     # 期待テキスト: gen_narration と同一の TTS 入力 (reading 優先 + 辞書適用)
-    expected = []
+    # 全件照合のため、欠落ビートがあれば黙殺せず停止する (部分照合で PASS にしない)。
+    expected, missing = [], []
     for scene in script["scenes"]:
         for bi, beat in enumerate(scene["beats"]):
             wav = audio_dir / f"{scene['id']}_b{bi:02d}.wav"
-            if wav.exists():
-                tts_text, _ = pn.apply_pronunciation(beat.get("reading") or beat["text"], pdict)
-                expected.append({"file": wav.name, "tts_text": tts_text,
-                                 "display": beat["text"]})
-    if not expected:
-        raise SystemExit(f"ビート WAV がありません: {audio_dir}")
+            if not wav.exists():
+                missing.append(wav.name)
+                continue
+            tts_text, _ = pn.apply_pronunciation(beat.get("reading") or beat["text"], pdict)
+            expected.append({"file": wav.name, "tts_text": tts_text,
+                             "display": beat["text"]})
+    if missing:
+        raise SystemExit(f"ビート WAV が欠落しています (全件照合不可): {missing}")
 
     t0 = time.monotonic()
     from faster_whisper import WhisperModel

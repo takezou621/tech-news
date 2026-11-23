@@ -67,15 +67,22 @@ def median_f0(x, sr: int) -> float:
 
 
 def collect_beats(audio_dir: Path, script: dict) -> list[dict]:
-    """ビート WAV 名と台本テキストを対応付ける (gen_narration の命名規約に一致)。"""
-    rows = []
+    """ビート WAV 名と台本テキストを対応付ける (gen_narration の命名規約に一致)。
+
+    台本にあるのに WAV が無いビートがあれば停止する (欠落を黙殺して
+    測定対象を減らさないため — ゲートの母数を台本どおりに保つ)。
+    """
+    rows, missing = [], []
     for scene in script["scenes"]:
         for bi, beat in enumerate(scene["beats"]):
             wav = audio_dir / f"{scene['id']}_b{bi:02d}.wav"
             if not wav.exists():
+                missing.append(wav.name)
                 continue
             rows.append({"wav": wav, "file": wav.name, "speaker": beat.get("speaker", "narrator"),
                          "text": beat.get("reading") or beat["text"]})
+    if missing:
+        raise SystemExit(f"ビート WAV が欠落しています (測定不可): {missing}")
     return rows
 
 
