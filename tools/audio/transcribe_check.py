@@ -137,6 +137,8 @@ def main() -> int:
                              "display": beat["text"]})
     if missing:
         raise SystemExit(f"ビート WAV が欠落しています (全件照合不可): {missing}")
+    if not expected:
+        raise SystemExit(f"台本にビートがありません (照合対象 0 件): {script_path}")
 
     t0 = time.monotonic()
     from faster_whisper import WhisperModel
