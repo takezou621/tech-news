@@ -84,7 +84,7 @@ def collect_beats(audio_dir: Path, script: dict) -> list[dict]:
     if missing:
         raise SystemExit(f"ビート WAV が欠落しています (測定不可): {missing}")
     if not rows:
-        raise SystemExit(f"測定対象のビートがありません: {audio_dir}")
+        raise SystemExit(f"台本にビートがありません (測定対象 0 件): {audio_dir}")
     return rows
 
 
