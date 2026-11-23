@@ -48,6 +48,13 @@ def check(name: str, fn) -> None:
     except AssertionError as e:
         results.append({"test": name, "result": "FAIL", "detail": str(e)})
         print(f"FAIL {name}: {e}")
+    except SystemExit as e:
+        # テスト本体から SystemExit が漏れた場合は FAIL (ハーネスを巻き込んで
+        # 停止させず、残りの判定を必ず実行する)。ただし本体が意図的に
+        # assert した SystemExit は本体側で捕捉済みのため、ここに来たら漏れ。
+        results.append({"test": name, "result": "FAIL",
+                        "detail": f"SystemExit escaped test body: {e}"})
+        print(f"FAIL {name}: SystemExit がテスト本体から漏出: {e}")
     except Exception as e:  # noqa: BLE001 — テストランナーとして全例外を報告に変換する
         results.append({"test": name, "result": "ERROR", "detail": f"{type(e).__name__}: {e}"})
         print(f"ERROR {name}: {type(e).__name__}: {e}")
@@ -79,9 +86,12 @@ def t03_dict_validation_rejects_non_kana() -> None:
         p.write_text('{"グラフ": "graph"}', encoding="utf-8")
         try:
             pn.load_pronunciation_dict(p)
+        except SystemExit as e:
+            # 拒否を肯定検証: 非0 終了かつ拒否理由のメッセージ付きであること
+            assert e.code, "終了コードが空 (正常終了扱い)"
+            assert "かな文字" in str(e.code), f"拒否理由が不正: {e.code}"
+        else:
             raise AssertionError("かな以外の値を含む辞書が読めてしまった")
-        except SystemExit:
-            pass
 
 
 def t04_single_narrator_only() -> None:
@@ -91,26 +101,40 @@ def t04_single_narrator_only() -> None:
         sp.write_text(json.dumps(script, ensure_ascii=False), encoding="utf-8")
         try:
             gen_narration.load_script(sp)
+        except SystemExit as e:
+            assert e.code, "終了コードが空 (正常終了扱い)"
+            assert "単独ナレーター" in str(e.code), f"拒否理由が不正: {e.code}"
+        else:
             raise AssertionError("narrator 以外の話者を含む台本が受理された")
-        except SystemExit:
-            pass
 
 
 def t05_config_mixing_abort() -> None:
+    # 隔離: カウンタを一時ディレクトリへ、TTS を失敗経路 (無効クォータプロジェクト) へ。
+    # ガードが壊れて生成が進んでも、本番カウンタの汚染と成功 TTS 呼び出しが起きない。
     cfg = cloud_tts.load_config()
+    cfg["quotaProject"] = "invalid-project-selftest"
+    cfg["watchdog"] = {"timeoutSec": 30, "maxRetries": 0, "backoffSec": [0]}
     script = gen_narration.load_script(AUDITION_SCRIPT)
     pdict, _ = pn.load_pronunciation_dict()
     with tempfile.TemporaryDirectory() as td:
-        out = Path(td)
-        old = {"config_hash": "deadbeef00000000", "voice": "ja-JP-Neural2-C"}
-        (out / "manifest.json").write_text(json.dumps(old), encoding="utf-8")
-        (out / "s01_b00.wav").write_bytes(b"\0" * 2048)
+        out = Path(td) / "mixing"
+        out.mkdir()
+        usage_td = Path(td) / "usage"
+        old = cloud_tts.USAGE_DIR
+        cloud_tts.USAGE_DIR = usage_td
         try:
-            gen_narration.generate_beat_set(cfg, script, out, voice_name="ja-JP-Neural2-C",
-                                            job_id="selftest", pdict=pdict)
-            raise AssertionError("異なる設定ハッシュの既存音声との混在が許された")
-        except SystemExit as e:
-            assert "ABORT" in str(e), f"中止メッセージが ABORT でない: {e}"
+            old_manifest = {"config_hash": "deadbeef00000000", "voice": "ja-JP-Neural2-C"}
+            (out / "manifest.json").write_text(json.dumps(old_manifest), encoding="utf-8")
+            (out / "s01_b00.wav").write_bytes(b"\0" * 2048)
+            try:
+                gen_narration.generate_beat_set(cfg, script, out, voice_name="ja-JP-Neural2-C",
+                                                job_id="selftest", pdict=pdict)
+                raise AssertionError("異なる設定ハッシュの既存音声との混在が許された")
+            except SystemExit as e:
+                assert e.code, "終了コードが空 (正常終了扱い)"
+                assert "ABORT" in str(e.code), f"中止メッセージが ABORT でない: {e.code}"
+        finally:
+            cloud_tts.USAGE_DIR = old
 
 
 def t06_usage_limit_stop() -> None:
@@ -161,9 +185,11 @@ def t08_gate_missing_beat_abort() -> None:
     with tempfile.TemporaryDirectory() as td:
         try:
             cvc.collect_beats(Path(td), script)
-            raise AssertionError("欠落ビートが黙殺された")
         except SystemExit as e:
-            assert "欠落" in str(e), f"欠落として報告されない: {e}"
+            assert e.code, "終了コードが空 (正常終了扱い)"
+            assert "欠落" in str(e.code), f"欠落として報告されない: {e.code}"
+        else:
+            raise AssertionError("欠落ビートが黙殺された")
 
 
 def t09_gate_zero_beat_abort() -> None:
@@ -171,9 +197,11 @@ def t09_gate_zero_beat_abort() -> None:
     with tempfile.TemporaryDirectory() as td:
         try:
             cvc.collect_beats(Path(td), script)
-            raise AssertionError("ゼロビート台本でゲートが通った")
         except SystemExit as e:
-            assert "ビートがありません" in str(e), f"想定外の中止: {e}"
+            assert e.code, "終了コードが空 (正常終了扱い)"
+            assert "ビートがありません" in str(e.code), f"想定外の中止: {e.code}"
+        else:
+            raise AssertionError("ゼロビート台本でゲートが通った")
 
 
 def t10_transcribe_missing_beat_abort() -> None:
@@ -189,6 +217,10 @@ def t10_transcribe_missing_beat_abort() -> None:
 
 
 def main() -> int:
+    # assert 文を検証に使うため、最適化モード (-O) では無意味になる。実行を拒否する。
+    if not __debug__:
+        print("FAIL selftest: python -O では assert が無効のため実行不可 (-O を外して実行)")
+        return 1
     ap = argparse.ArgumentParser(description="ガード機構の自己テスト (成功TTS呼び出しなし)")
     ap.add_argument("--with-network", action="store_true",
                     help="403 経路のウォッチドッグ テストを含める (外部ネットワークを使用)")
