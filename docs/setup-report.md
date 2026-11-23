@@ -3,6 +3,10 @@
 ブランチ `setup/production-pipeline` での作業記録。実装: DSH / 監督: Muse。
 今回の完了条件は「公開」ではなく、フェーズ1 の基盤 + 短いテスト音声でのパイプライン通過。
 
+補足 (v2 ルール第5〜7章の遡及適用分):
+- 実施テストの生結果と再実行手順: [docs/selftest-phase1.md](selftest-phase1.md)
+- 主要要件のトレーサビリティ対応表: [docs/traceability-phase1.md](traceability-phase1.md)
+
 ## 1. TTS 経路 (決定事項どおり Google Cloud TTS)
 
 - 認証方式: この Mac の既存 gcloud ユーザー認証 + `X-Goog-User-Project` ヘッダ

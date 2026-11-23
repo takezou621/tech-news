@@ -1,0 +1,55 @@
+{
+ "results": [
+  {
+   "test": "t01 辞書適用 (最長一致: OpenAI→AI 部分置換なし)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t02 辞書適用 (境界: xAI 内 AI ブロック / NVIDIA社 接尾許可)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t03 辞書検証 (かな以外の値を拒否)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t04 単独ナレーター固定 (narrator 以外を拒否)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t05 混在防止 (異なる config ハッシュで ABORT)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t06 月間文字数上限 (monthlyStopChars で停止)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t07 ウォッチドッグ (403 をリトライし TTSError / カウンタ計上なし)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t08 ゲート欠落ビート (黙殺せず停止)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t09 ゲートゼロビート (黙って PASS にしない)",
+   "result": "PASS",
+   "detail": ""
+  },
+  {
+   "test": "t10 全件照合 欠落ビート (CLI 経路で非0 終了)",
+   "result": "PASS",
+   "detail": ""
+  }
+ ],
+ "pass": true
+}
