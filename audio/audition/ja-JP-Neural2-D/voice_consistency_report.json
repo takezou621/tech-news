@@ -1,0 +1,43 @@
+{
+ "audio_dir": "/Users/kawai/dev/tech-news/audio/audition/ja-JP-Neural2-D",
+ "thresholds": {
+  "f0DeviationMax": 0.15,
+  "rateDeviationMax": 0.25
+ },
+ "rows": [
+  {
+   "file": "s01_b00.wav",
+   "speaker": "narrator",
+   "f0": 156.1,
+   "rate": 5.99,
+   "dur": 9.69,
+   "flag": ""
+  },
+  {
+   "file": "s01_b01.wav",
+   "speaker": "narrator",
+   "f0": 155.8,
+   "rate": 6.59,
+   "dur": 15.18,
+   "flag": ""
+  },
+  {
+   "file": "s01_b02.wav",
+   "speaker": "narrator",
+   "f0": 147.0,
+   "rate": 6.86,
+   "dur": 16.05,
+   "flag": ""
+  },
+  {
+   "file": "s01_b03.wav",
+   "speaker": "narrator",
+   "f0": 145.0,
+   "rate": 5.48,
+   "dur": 9.68,
+   "flag": ""
+  }
+ ],
+ "flagged": [],
+ "pass": true
+}

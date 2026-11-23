@@ -1,0 +1,33 @@
+{
+  "episode": "audition-test",
+  "title": "声候補オーディション用テスト台本 (Tech用語・数字・英語固有名詞・難読語入り)",
+  "notes": "数字と固有名詞は出典確認済み。出典は content/audition/sources.md。1候補あたり約40秒を想定。",
+  "scenes": [
+    {
+      "id": "s01",
+      "section": "intro",
+      "beats": [
+        {
+          "speaker": "narrator",
+          "text": "こんにちは、テックニュース解説です。今日はAIと開発者ツールに関する3つのトピックを、一次情報ベースでお伝えします。",
+          "reading": null
+        },
+        {
+          "speaker": "narrator",
+          "text": "まず前提の確認です。NVIDIAはGPU大手です。OpenAIのChatGPTやAnthropicのClaude、GoogleのGeminiといったLLMは、クラウドAPIを通じて広く使われています。",
+          "reading": null
+        },
+        {
+          "speaker": "narrator",
+          "text": "開発の現場では、DockerとKubernetesがコンテナ技術の定番です。Dockerは2013年、Kubernetesは2014年に登場し、PythonやTypeScript、Rustと並ぶ基本スキルになっています。",
+          "reading": null
+        },
+        {
+          "speaker": "narrator",
+          "text": "さらに、ソフトウェアの脆弱性への対応は、毎日の習慣です。それでは、今日のニュースを順番に見ていきましょう。",
+          "reading": null
+        }
+      ]
+    }
+  ]
+}

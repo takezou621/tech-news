@@ -1,0 +1,31 @@
+{
+ "config_hash": "63522110165af629",
+ "engine": "google-cloud-tts",
+ "voice": "ja-JP-Neural2-D",
+ "beats": {
+  "s01_b00.wav": {
+   "speaker": "narrator",
+   "config_hash": "63522110165af629",
+   "engine": "google-cloud-tts",
+   "voice": "ja-JP-Neural2-D"
+  },
+  "s01_b01.wav": {
+   "speaker": "narrator",
+   "config_hash": "63522110165af629",
+   "engine": "google-cloud-tts",
+   "voice": "ja-JP-Neural2-D"
+  },
+  "s01_b02.wav": {
+   "speaker": "narrator",
+   "config_hash": "63522110165af629",
+   "engine": "google-cloud-tts",
+   "voice": "ja-JP-Neural2-D"
+  },
+  "s01_b03.wav": {
+   "speaker": "narrator",
+   "config_hash": "63522110165af629",
+   "engine": "google-cloud-tts",
+   "voice": "ja-JP-Neural2-D"
+  }
+ }
+}
