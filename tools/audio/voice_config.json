@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "engine": "google-cloud-tts",
+  "apiEndpoint": "https://texttospeech.googleapis.com/v1/text:synthesize",
+  "quotaProject": "muse-gemini-514814",
+  "gcloudAccount": "takezou621@gmail.com",
+  "languageCode": "ja-JP",
+  "modelFamily": "Neural2",
+  "audio": {
+    "audioEncoding": "LINEAR16",
+    "sampleRateHertz": 24000,
+    "speakingRate": 1.0,
+    "pitch": 0.0,
+    "volumeGainDb": 0.0,
+    "effectsProfileId": ["headphone-class-device"]
+  },
+  "voices": {
+    "narrator": {
+      "voiceName": "ja-JP-Neural2-D",
+      "status": "provisional",
+      "statusNoteJa": "暫定: オーディション (audio/audition) の測定値に基づく推奨案 (書き起こし一致率が3候補中最高・話速中庸)。最終確定は監督側 (Muse) の耳確認の後。",
+      "roleJa": "単独ナレーター (Tech系ニュース解説、1名のみ)"
+    }
+  },
+  "limits": {
+    "monthlyFreeTierChars": 1000000,
+    "monthlyStopChars": 900000,
+    "freeTierNoteJa": "Neural2 の無料枠 (月100万文字) は課金アカウント単位のため eng-listening と実質共有。当リポジトリのカウンタは自チャンネル分のみ。合算が上限に近づいたら停止して報告する。"
+  },
+  "watchdog": {
+    "timeoutSec": 180,
+    "maxRetries": 3,
+    "backoffSec": [15, 30, 60]
+  },
+  "requestDelaySec": 1.0,
+  "beatGapSec": 0.3,
+  "consistencyGate": {
+    "f0DeviationMax": 0.15,
+    "rateDeviationMax": 0.25,
+    "rateUnit": "chars/sec"
+  },
+  "transcribeCheck": {
+    "model": "small",
+    "device": "cpu",
+    "computeType": "int8",
+    "language": "ja",
+    "overallThreshold": 0.7,
+    "beatThreshold": 0.6,
+    "sampling": "forbidden"
+  },
+  "rules": [
+    "声・言語・話速などの生成パラメータは全エピソード・全ビートでこのファイルの値のみを使う。行ごとの場当たり的な変更をしない。",
+    "Google Cloud TTS の ja-JP-Neural2 系の声のみを使う (無料枠: 月100万文字)。Studio / Chirp / Wavenet 等の有料単価の高い声は使わない。Gemini TTS は使わない (プロジェクト muse-gemini の50件/日枠をアニメ日本史ラボと共有するため)。",
+    "ナレーターは単独1名のみ。複数キャラの掛け合いにしない。",
+    "障害時も別エンジン・別声へ切り替えない (待って再開する)。",
+    "月間累計文字数が monthlyStopChars (90万) に達したら生成を停止して報告する。再生成分 (送信済み未確定) も累計に含める。",
+    "課金が発生する設定変更 (API の追加有効化、予算設定の変更など) は行わない。必要になったら止めて報告する。",
+    "設定ハッシュが異なる既存音声が同じ出力先にある場合、生成を中止する (混在防止)。",
+    "生成前に pronunciation_audit.py で台本の辞書未登録語を洗い出す。辞書への登録は出典確認済み (verified) の語のみ。推測の読みで登録しない。",
+    "生成後は check_voice_consistency.py (一貫性ゲート) と transcribe_check.py (全文書き起こし照合、全件・サンプリング禁止) を通す。FAIL のビートは削除して再生成する。",
+    "API キーやアクセストークンの値をログ・PR・コミット・報告に出さない。認証は既存 gcloud ユーザー認証 + X-Goog-User-Project (クォータプロジェクト) を使う。"
+  ]
+}

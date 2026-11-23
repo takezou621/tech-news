@@ -1,0 +1,8 @@
+# 生成物・計測データはコミットしない (オーディションのサンプルとレポートは除く)
+audio/episodes/*
+!audio/episodes/.gitkeep
+tools/audio/usage/
+reports/
+__pycache__/
+*.pyc
+.DS_Store

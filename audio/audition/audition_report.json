@@ -1,0 +1,31 @@
+{
+ "generated_at": "2026-11-23T14:45:37+00:00",
+ "script": "content/audition/test_script.json",
+ "dict_sha": "2c1e565a9aeb",
+ "candidates": {
+  "ja-JP-Neural2-B": {
+   "dir": "audio/audition/ja-JP-Neural2-B",
+   "full_wav": "audio/audition/ja-JP-Neural2-B/full.wav",
+   "beats": 4,
+   "speech_sec": 51.906,
+   "generate_sec": 0.0,
+   "monthly_chars_used": 317
+  },
+  "ja-JP-Neural2-C": {
+   "dir": "audio/audition/ja-JP-Neural2-C",
+   "full_wav": "audio/audition/ja-JP-Neural2-C/full.wav",
+   "beats": 4,
+   "speech_sec": 49.801,
+   "generate_sec": 9.1,
+   "monthly_chars_used": 634
+  },
+  "ja-JP-Neural2-D": {
+   "dir": "audio/audition/ja-JP-Neural2-D",
+   "full_wav": "audio/audition/ja-JP-Neural2-D/full.wav",
+   "beats": 4,
+   "speech_sec": 50.593,
+   "generate_sec": 9.4,
+   "monthly_chars_used": 951
+  }
+ }
+}
