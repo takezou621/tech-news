@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -210,7 +211,9 @@ def t10_transcribe_missing_beat_abort() -> None:
         cmd = ["uv", "run", "--with", "faster-whisper", "--with", "pykakasi", "--with", "numpy",
                "python", str(HERE / "transcribe_check.py"),
                "--audio-dir", td, "--script", "content/audition/test_script.json"]
-        p = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True, timeout=300)
+        p = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True,
+                           encoding="utf-8", env={**os.environ, "PYTHONUTF8": "1"},
+                           timeout=300)
         out = p.stdout + p.stderr
         assert p.returncode != 0, f"欠落ビートで終了コード 0: {out[-300:]}"
         assert "欠落" in out, f"欠落として報告されない: {out[-300:]}"
